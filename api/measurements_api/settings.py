@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'k^&*&d+m=z2=jd1s7o=897d28=07dhe@2k^kpo^+&#pf&#hz4@'
+SECRET_KEY = os.environ.get("secret_key", "secret")
 CORS_ORIGIN_ALLOW_ALL = True
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -28,8 +28,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = "641328261456-20e7ud9jmghth8ekn25kcgmbp8o2vcm1.apps.googleusercontent.com"
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "pGuYK3SCWjzbitisknNWDkoc"
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get("oauth2_key")
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get("oauth2_secret")
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
     'https://www.googleapis.com/auth/userinfo.email',
