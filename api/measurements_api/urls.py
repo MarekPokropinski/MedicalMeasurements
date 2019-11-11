@@ -21,6 +21,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^auth/', include('rest_framework_social_oauth2.urls')),
     url(r'^accounts/', include('django.contrib.auth.urls')),
-    url(r'^measurements/', include('measurements.urls')),
+    url(r'^api/', include('measurements.urls')),
     url(r'^auth/login/', include('Authorization.urls')),
 ]

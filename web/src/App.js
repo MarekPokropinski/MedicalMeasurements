@@ -1,37 +1,29 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-import GoogleLogin from 'react-google-login';
+import React from "react";
+import "./App.css";
+import Login from "./components/login";
+import MeasurementsContainer from "./components/MeasurementsContainer";
+import { isNull } from "util";
+import { Route, HashRouter } from "react-router-dom";
 
-function onSignIn(response) {
-  console.log('logged in! token: ', response)
-}
+class App extends React.Component {
+  state = {
+    loggedIn: false
+  };
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <GoogleLogin
-          clientId="641328261456-20e7ud9jmghth8ekn25kcgmbp8o2vcm1.apps.googleusercontent.com"
-          buttonText="LOGIN WITH GOOGLE"
-          onSuccess={onSignIn}
-          onFailure={onSignIn}
-        />
-      </header>
-    </div>
-  );
+  componentDidMount() {
+    const loggedIn = !isNull(localStorage.getItem("token"));
+    this.setState({ loggedIn });
+  }
+
+  render() {
+    return (
+      <div className="App">
+        <HashRouter>
+          <Route render={props=>this.state.loggedIn ? (<MeasurementsContainer {...props}/>) : (<Login {...props} onLogin={() => this.setState({ loggedIn: true })} />)}/>
+        </HashRouter>
+      </div>
+    );
+  }
 }
 
 export default App;
