@@ -1,9 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+from django.utils.timezone import now
 
 class HeartPressureMeasurement(models.Model):
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateTimeField(default=now)
     systolic_pressure = models.IntegerField()
     diastolic_pressure = models.IntegerField()
     heart_rate = models.IntegerField()
@@ -22,7 +22,7 @@ class HeartPressureMeasurement(models.Model):
         return str(self)
 
 class BloodSugarMeasurement(models.Model):
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateTimeField(default=now)
     level = models.IntegerField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
@@ -37,7 +37,7 @@ class BloodSugarMeasurement(models.Model):
         return str(self)
 
 class BmiMeasurement(models.Model):
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateTimeField(default=now)
     height = models.IntegerField()
     weight = models.DecimalField(decimal_places=1, max_digits=5)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
