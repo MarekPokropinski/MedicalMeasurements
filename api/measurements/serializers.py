@@ -67,11 +67,11 @@ class BloodSugarMeasurementSerializer(serializers.ModelSerializer):
     class Meta:
         model = BloodSugarMeasurement
         fields = ("id", "date", "level")
-        read_only_fields = ("date", "user")
+        read_only_fields = ("user",)
 
     def to_representation(self, value):
         ret = super().to_representation(value)
-        level = int(value.systolic_pressure)
+        level = int(value.level)
         ret["category"] = get_blood_sugar_category(level)
         return ret
 
@@ -80,7 +80,7 @@ class BmiMeasurementSerializer(serializers.ModelSerializer):
     class Meta:
         model = BmiMeasurement
         fields = ("id", "date", "weight", "height")
-        read_only_fields = ("date", "user")
+        read_only_fields = ("user",)
 
     def to_representation(self, value):
         ret = super().to_representation(value)

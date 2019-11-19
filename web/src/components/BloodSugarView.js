@@ -5,9 +5,9 @@ import { withStyles } from "@material-ui/core/styles";
 import { BottomNavigation, BottomNavigationAction } from "@material-ui/core";
 import autobind from "class-autobind";
 import { AddCircleRounded } from "@material-ui/icons";
-import HeartPressureTable from "./HeartPressureComponents/HeartPressureTable";
-import AddHeartPressureMeasurement from "./HeartPressureComponents/AddHeartPressureMeasurement";
-import HeartPressureChart from "./HeartPressureComponents/HeartPressureChart";
+import BloodSugarTable from "./BloodSugarComponents/BloodSugarTable";
+import AddSugarMeasurement from "./BloodSugarComponents/AddSugarMeasurement";
+import BloodSugarChart from "./BloodSugarComponents/BloodSugarChart";
 
 const styles = theme => ({
   root: {
@@ -25,7 +25,6 @@ const styles = theme => ({
     position: "sticky",
     bottom: 0,
     padding: "0 auto",
-    // left: "50%",
     width: "100%"
   }
 });
@@ -37,7 +36,7 @@ class HeartPressureView extends React.Component {
     autobind(this);
   }
   async fetchData(range) {
-    const data = (await axios.get(`api/heart-measurements?date_range=${range}`))
+    const data = (await axios.get(`api/sugar-measurements?date_range=${range}`))
       .data;
     this.setState({ data });
   }
@@ -49,25 +48,15 @@ class HeartPressureView extends React.Component {
   }
 
   async addMeasurement(measurement) {
-    const { sys, dia, hr, date } = measurement;
-    await axios.post("api/heart-measurements", {
-      systolic_pressure: sys,
-      diastolic_pressure: dia,
-      heart_rate: hr,
+    const { level, date } = measurement;
+    await axios.post("api/sugar-measurements", {
+      level,
       date: this.formatDate(date)
     });
     await this.fetchData(this.state.range);
   }
   async getCategory(measurement) {
-    const { sys, dia, hr } = measurement;
-    const systolic_pressure = sys;
-    const diastolic_pressure = dia;
-    const heart_rate = hr;
-    return axios.post("api/heart-measurements/category", {
-      systolic_pressure,
-      diastolic_pressure,
-      heart_rate
-    });
+    return axios.post("api/sugar-measurements/category", measurement);
   }
   componentDidMount() {
     this.fetchData("month");
@@ -83,7 +72,7 @@ class HeartPressureView extends React.Component {
     let subComponent = null;
     if (selectedItem === 0) {
       subComponent = (
-        <AddHeartPressureMeasurement
+        <AddSugarMeasurement
           classes={classes}
           onAdd={this.addMeasurement}
           getCategory={this.getCategory}
@@ -91,11 +80,11 @@ class HeartPressureView extends React.Component {
       );
     }
     if (selectedItem === 1) {
-      subComponent = <HeartPressureTable data={data} />;
+      subComponent = <BloodSugarTable data={data} />;
     }
     if (selectedItem === 2) {
       subComponent = (
-        <HeartPressureChart
+        <BloodSugarChart
           data={data}
           range={range}
           setRange={this.handleChangeRange}
