@@ -3,6 +3,7 @@ import { Tabs, Tab } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import { Route } from "react-router-dom";
 import HeartPressureView from "./HeartPressureView";
+import BloodSugarView from "./BloodSugarView";
 
 const styles = theme => ({
   root: {
@@ -92,6 +93,7 @@ class MeasurementsContainer extends React.Component {
         </div>
         <div className={classes.tabpanel}>
           <Route exact path="/pressure" component={HeartPressureView} />
+          <Route exact path="/sugar" component={BloodSugarView} />
         </div>
       </div>
     );

@@ -1,15 +1,14 @@
-import React from 'react';
-import logo from '../logo.svg';
-import '../App.css';
-import GoogleLogin from 'react-google-login';
+import React from "react";
+import logo from "../logo.svg";
+import "../App.css";
+import GoogleLogin from "react-google-login";
 
 function onSignIn(response, props) {
-  localStorage.setItem('token',response.accessToken)  
-  props.onLogin()
+  localStorage.setItem("token", response.accessToken);
+  props.onLogin();
 }
 
 function Login(props) {
-  console.log(props)
   return (
     <div className="App">
       <header className="App-header">
