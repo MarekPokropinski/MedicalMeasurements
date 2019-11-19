@@ -1,8 +1,29 @@
 from rest_framework import generics
+from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from .models import HeartPressureMeasurement, BmiMeasurement, BloodSugarMeasurement
-from .serializers import HeartPressureMeasurementSerializer, BmiMeasurementSerializer, BloodSugarMeasurementSerializer
+from .serializers import HeartPressureMeasurementSerializer, BmiMeasurementSerializer, BloodSugarMeasurementSerializer, get_heart_pressure_category
 from .permissions import IsOwner
+import datetime
+
+
+def getFilteredQueryset(view, model):
+    queryset = model.objects.filter(
+        user=view.request.user).order_by("-date")
+    date_range = view.request.query_params.get('date_range', None)
+    if date_range is not None:
+        end = datetime.datetime.now()
+        if date_range == 'week':
+            delta = 7
+        elif date_range == 'month':
+            delta = 31
+        elif date_range == 'year':
+            delta = 365
+        else:
+            return queryset
+        start = end - datetime.timedelta(delta)
+        queryset = queryset.filter(date__range=(start, end))
+    return queryset
 
 
 class ListHeartPressureView(generics.ListCreateAPIView):
@@ -10,10 +31,20 @@ class ListHeartPressureView(generics.ListCreateAPIView):
     serializer_class = HeartPressureMeasurementSerializer
 
     def get_queryset(self):
-        return HeartPressureMeasurement.objects.filter(user=self.request.user).order_by("date")
+        return getFilteredQueryset(self, HeartPressureMeasurement)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+class HeartPressureCategoryView(generics.GenericAPIView):
+    serializer_class = HeartPressureMeasurementSerializer
+    def post(self, request):
+        serializer = self.get_serializer_class()(data=request.data)
+        if serializer.is_valid():
+            data = serializer.validated_data
+            return Response(get_heart_pressure_category(data['systolic_pressure'],data['diastolic_pressure']))
+        else:
+            return Response(status=400)
 
 
 class HeartPressureDetailsView(generics.RetrieveUpdateDestroyAPIView):
@@ -27,7 +58,7 @@ class ListBloodSugarView(generics.ListCreateAPIView):
     serializer_class = BloodSugarMeasurementSerializer
 
     def get_queryset(self):
-        return BloodSugarMeasurement.objects.filter(user=self.request.user).order_by("date")
+        return getFilteredQueryset(self, BloodSugarMeasurement)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -44,7 +75,7 @@ class ListBmiMeasurementView(generics.ListCreateAPIView):
     serializer_class = BmiMeasurementSerializer
 
     def get_queryset(self):
-        return BmiMeasurement.objects.filter(user=self.request.user).order_by("date")
+        return getFilteredQueryset(self, BmiMeasurement)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)

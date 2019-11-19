@@ -1,8 +1,5 @@
 import React from "react";
-import {
-  Tabs,
-  Tab,
-} from "@material-ui/core";
+import { Tabs, Tab } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import { Route } from "react-router-dom";
 import HeartPressureView from "./HeartPressureView";
@@ -11,7 +8,7 @@ const styles = theme => ({
   root: {
     display: "flex",
     background: theme.palette.background.paper,
-    width:"100vw"
+    width: "100vw"
   },
   tabs_container: {
     background: theme.palette.background.default,
@@ -24,7 +21,7 @@ const styles = theme => ({
   },
   tabpanel: {
     height: "100vh",
-    overflowY: "scroll",
+    overflowY: "hidden",
     width: "100%"
   },
   tabTitle: {
@@ -52,20 +49,14 @@ class MeasurementsContainer extends React.Component {
   constructor() {
     super();
     this.state = {
-      selectedTab:3
-    }
+      selectedTab: 1
+    };
     this.routes = ["/pressure/", "/sugar/"];
   }
 
-//   componentDidMount() {
-//     this.setState({selectedTab:this.routes.map(route=>this.history.location.pathname.startsWith(route)).indexOf(true)+1})
-//   }
-
   render() {
-    const { classes} = this.props;
-    const {selectedTab} = this.state
-
-    console.log(this.props)
+    const { classes } = this.props;
+    const { selectedTab } = this.state;
 
     return (
       <div className={classes.root}>
@@ -77,7 +68,7 @@ class MeasurementsContainer extends React.Component {
             onChange={(_event, newValue) => {
               const route = this.routes[newValue - 1];
               this.props.history.push({ pathname: route });
-              this.setState({selectedTab:newValue})
+              this.setState({ selectedTab: newValue });
             }}
           >
             <Tab
@@ -85,14 +76,22 @@ class MeasurementsContainer extends React.Component {
               label="Medical Measurements"
               disabled
               wrapped
-              {...a11yProps(3)}
+              {...a11yProps(0)}
             />
-            <Tab className={classes.tab} label="Heart pressure" {...a11yProps(0)} />
-            <Tab className={classes.tab} label="Sugar level" {...a11yProps(1)} />
+            <Tab
+              className={classes.tab}
+              label="Heart pressure"
+              {...a11yProps(1)}
+            />
+            <Tab
+              className={classes.tab}
+              label="Sugar level"
+              {...a11yProps(2)}
+            />
           </Tabs>
         </div>
         <div className={classes.tabpanel}>
-            <Route exact path="/pressure" component={HeartPressureView} />
+          <Route exact path="/pressure" component={HeartPressureView} />
         </div>
       </div>
     );
