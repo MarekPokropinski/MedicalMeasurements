@@ -36,6 +36,7 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
     'https://www.googleapis.com/auth/userinfo.profile',
 ]
 
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -53,10 +54,12 @@ INSTALLED_APPS = [
     'rest_framework_social_oauth2',
 
     'measurements',
-    'Authorization'
+    'Authorization',
+    'rest_framework_swagger',
 ]
 
 REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
         'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
