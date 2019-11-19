@@ -2,7 +2,13 @@ from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from .models import HeartPressureMeasurement, BmiMeasurement, BloodSugarMeasurement
-from .serializers import HeartPressureMeasurementSerializer, BmiMeasurementSerializer, BloodSugarMeasurementSerializer, get_heart_pressure_category
+from .serializers import (
+    HeartPressureMeasurementSerializer,
+    BmiMeasurementSerializer,
+    BloodSugarMeasurementSerializer,
+    get_heart_pressure_category,
+    get_blood_sugar_category,
+    get_bmi_category)
 from .permissions import IsOwner
 import datetime
 
@@ -36,13 +42,15 @@ class ListHeartPressureView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
+
 class HeartPressureCategoryView(generics.GenericAPIView):
     serializer_class = HeartPressureMeasurementSerializer
+
     def post(self, request):
         serializer = self.get_serializer_class()(data=request.data)
         if serializer.is_valid():
             data = serializer.validated_data
-            return Response(get_heart_pressure_category(data['systolic_pressure'],data['diastolic_pressure']))
+            return Response(get_heart_pressure_category(data['systolic_pressure'], data['diastolic_pressure']))
         else:
             return Response(status=400)
 
@@ -64,6 +72,18 @@ class ListBloodSugarView(generics.ListCreateAPIView):
         serializer.save(user=self.request.user)
 
 
+class BloodSugarCategoryView(generics.GenericAPIView):
+    serializer_class = BloodSugarMeasurementSerializer
+
+    def post(self, request):
+        serializer = self.get_serializer_class()(data=request.data)
+        if serializer.is_valid():
+            data = serializer.validated_data
+            return Response(get_blood_sugar_category(data['level']))
+        else:
+            return Response(status=400)
+
+
 class BloodSugarDetailsView(generics.RetrieveUpdateDestroyAPIView):
     queryset = BloodSugarMeasurement.objects.all()
     serializer_class = BloodSugarMeasurementSerializer
@@ -80,6 +100,16 @@ class ListBmiMeasurementView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
+class BmiCategoryView(generics.GenericAPIView):
+    serializer_class = BmiMeasurementSerializer
+
+    def post(self, request):
+        serializer = self.get_serializer_class()(data=request.data)
+        if serializer.is_valid():
+            data = serializer.validated_data
+            return Response(get_bmi_category(data['bmi']))
+        else:
+            return Response(status=400)
 
 class BmiMeasurementDetailsView(generics.RetrieveUpdateDestroyAPIView):
     queryset = BmiMeasurement.objects.all()
