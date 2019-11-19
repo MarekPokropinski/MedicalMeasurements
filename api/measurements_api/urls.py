@@ -13,11 +13,27 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from rest_framework import response, schemas
+from rest_framework.decorators import api_view, renderer_classes
+from rest_framework_swagger.renderers import OpenAPIRenderer, SwaggerUIRenderer
 from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls import url
+from rest_framework_swagger.views import get_swagger_view
+
+# schema_view = get_swagger_view(
+#     title="Medical Measurements API")
+
+
+@api_view()
+@renderer_classes([OpenAPIRenderer])
+def schema_view(request):
+    generator = schemas.SchemaGenerator(title='Medical Measurements API')
+    return response.Response(generator.get_schema(request=request))
+
 
 urlpatterns = [
+    url(r'^swagger$', schema_view),
     url(r'^admin/', admin.site.urls),
     url(r'^auth/', include('rest_framework_social_oauth2.urls')),
     url(r'^accounts/', include('django.contrib.auth.urls')),
