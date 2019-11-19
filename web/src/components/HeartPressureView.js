@@ -94,7 +94,9 @@ function AddHeartPressureMeasurement(props) {
               setState(newState);
               checkCategory(newState);
             }}
-            // endAdornment={<InputAdornment position="end">mmHg</InputAdornment>}
+            InputProps={{
+              endAdornment: <InputAdornment position="end">mmHg</InputAdornment>
+            }}
             inputProps={{
               step: 1,
               min: 0,
@@ -111,7 +113,9 @@ function AddHeartPressureMeasurement(props) {
               setState(newState);
               checkCategory(newState);
             }}
-            // endAdornment={<InputAdornment position="end">mmHg</InputAdornment>}
+            InputProps={{
+              endAdornment: <InputAdornment position="end">mmHg</InputAdornment>
+            }}
             inputProps={{
               step: 1,
               min: 0,
@@ -124,6 +128,9 @@ function AddHeartPressureMeasurement(props) {
             label="Heart Rate"
             value={state.hr}
             onChange={event => setState({ ...state, hr: event.target.value })}
+            InputProps={{
+              endAdornment: <InputAdornment position="end">bpm</InputAdornment>
+            }}
             // endAdornment={<InputAdornment position="end">bpm</InputAdornment>}
             inputProps={{
               step: 1,

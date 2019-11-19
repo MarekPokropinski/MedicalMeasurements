@@ -1,12 +1,30 @@
-import Axios from 'axios';
+import Axios from "axios";
+import { createBrowserHistory } from "history";
 
 const client = Axios.create({
-    // baseURL: 'https://medical-measurements.herokuapp.com'
-    baseURL: 'http://localhost:8000'
-})
+  baseURL: "http://localhost:8000"
+});
 
-client.interceptors.request.use(config=>{
-    return {...config,headers:{'Authorization':`Bearer google-oauth2 ${localStorage.getItem('token')}`}}
-})
+client.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.response.status === 401) {
+      localStorage.removeItem("token");
+      window.location.reload();
+      return Promise.reject(error);
+    } else {
+      return Promise.reject(error);
+    }
+  }
+);
+
+client.interceptors.request.use(config => {
+  return {
+    ...config,
+    headers: {
+      Authorization: `Bearer google-oauth2 ${localStorage.getItem("token")}`
+    }
+  };
+});
 
 export default client;
