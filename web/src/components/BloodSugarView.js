@@ -29,7 +29,7 @@ const styles = theme => ({
   }
 });
 
-class HeartPressureView extends React.Component {
+class BloodSugarView extends React.Component {
   state = { data: null, selectedItem: 0, range: "month" };
   constructor() {
     super();
@@ -113,4 +113,4 @@ class HeartPressureView extends React.Component {
   }
 }
 
-export default withStyles(styles)(HeartPressureView);
+export default withStyles(styles)(BloodSugarView);

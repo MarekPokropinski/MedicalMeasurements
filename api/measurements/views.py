@@ -33,7 +33,6 @@ def getFilteredQueryset(view, model):
 
 
 class ListHeartPressureView(generics.ListCreateAPIView):
-    queryset = HeartPressureMeasurement.objects.all()
     serializer_class = HeartPressureMeasurementSerializer
 
     def get_queryset(self):
@@ -62,7 +61,6 @@ class HeartPressureDetailsView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class ListBloodSugarView(generics.ListCreateAPIView):
-    queryset = BloodSugarMeasurement.objects.all()
     serializer_class = BloodSugarMeasurementSerializer
 
     def get_queryset(self):
@@ -91,7 +89,6 @@ class BloodSugarDetailsView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class ListBmiMeasurementView(generics.ListCreateAPIView):
-    queryset = BmiMeasurement.objects.all()
     serializer_class = BmiMeasurementSerializer
 
     def get_queryset(self):
