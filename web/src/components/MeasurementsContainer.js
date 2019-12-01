@@ -4,6 +4,7 @@ import { withStyles } from "@material-ui/core/styles";
 import { Route } from "react-router-dom";
 import HeartPressureView from "./HeartPressureView";
 import BloodSugarView from "./BloodSugarView";
+import BmiView from "./BmiView";
 
 const styles = theme => ({
   root: {
@@ -52,7 +53,7 @@ class MeasurementsContainer extends React.Component {
     this.state = {
       selectedTab: 1
     };
-    this.routes = ["/pressure/", "/sugar/"];
+    this.routes = ["/pressure/", "/sugar/", "/bmi/"];
   }
 
   render() {
@@ -89,11 +90,13 @@ class MeasurementsContainer extends React.Component {
               label="Sugar level"
               {...a11yProps(2)}
             />
+            <Tab className={classes.tab} label="Bmi" {...a11yProps(3)} />
           </Tabs>
         </div>
         <div className={classes.tabpanel}>
           <Route exact path="/pressure" component={HeartPressureView} />
           <Route exact path="/sugar" component={BloodSugarView} />
+          <Route exact path="/bmi" component={BmiView} />
         </div>
       </div>
     );

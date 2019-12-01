@@ -104,7 +104,9 @@ class BmiCategoryView(generics.GenericAPIView):
         serializer = self.get_serializer_class()(data=request.data)
         if serializer.is_valid():
             data = serializer.validated_data
-            return Response(get_bmi_category(data['bmi']))
+            if data['height']<10:
+                return Response(status=400)            
+            return Response(get_bmi_category(float(data['weight'])/((data['height']/100)**2)))
         else:
             return Response(status=400)
 
