@@ -7,7 +7,11 @@ import {
   TableHead,
   TableRow,
   Table,
-  Paper
+  Paper,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel
 } from "@material-ui/core";
 
 import getRowColor from "./getRowColor";
@@ -24,14 +28,24 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function BloodSugarTable(props) {
-  const { data } = props;
+  const { data, range, setRange } = props;
   const classes = useStyles();
   if (data === null) {
     return null;
   }
-
+  const timeOptions = ["week", "month", "year"];
   return (
     <Paper className={classes.paper}>
+      <FormControl>
+        <InputLabel>Time</InputLabel>
+        <Select value={range} onChange={event => setRange(event.target.value)}>
+          {timeOptions.map(option => (
+            <MenuItem key={option} value={option}>
+              {option}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
       <Table className={classes.table} size="small">
         <TableHead>
           <TableRow>

@@ -80,7 +80,13 @@ class BloodSugarView extends React.Component {
       );
     }
     if (selectedItem === 1) {
-      subComponent = <BloodSugarTable data={data} />;
+      subComponent = (
+        <BloodSugarTable
+          data={data}
+          range={range}
+          setRange={this.handleChangeRange}
+        />
+      );
     }
     if (selectedItem === 2) {
       subComponent = (

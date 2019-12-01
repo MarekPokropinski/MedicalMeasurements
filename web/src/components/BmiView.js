@@ -87,7 +87,9 @@ class BmiView extends React.Component {
       );
     }
     if (selectedItem === 1) {
-      subComponent = <BmiTable data={data} />;
+      subComponent = (
+        <BmiTable data={data} range={range} setRange={this.handleChangeRange} />
+      );
     }
     if (selectedItem === 2) {
       subComponent = (

@@ -91,7 +91,13 @@ class HeartPressureView extends React.Component {
       );
     }
     if (selectedItem === 1) {
-      subComponent = <HeartPressureTable data={data} />;
+      subComponent = (
+        <HeartPressureTable
+          data={data}
+          range={range}
+          setRange={this.handleChangeRange}
+        />
+      );
     }
     if (selectedItem === 2) {
       subComponent = (
