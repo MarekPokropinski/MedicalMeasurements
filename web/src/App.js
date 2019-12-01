@@ -19,7 +19,21 @@ class App extends React.Component {
     return (
       <div className="App">
         <HashRouter>
-          <Route render={props=>this.state.loggedIn ? (<MeasurementsContainer {...props}/>) : (<Login {...props} onLogin={() => this.setState({ loggedIn: true })} />)}/>
+          <Route
+            render={props =>
+              this.state.loggedIn ? (
+                <MeasurementsContainer
+                  {...props}
+                  onLogout={() => this.setState({ loggedIn: false })}
+                />
+              ) : (
+                <Login
+                  {...props}
+                  onLogin={() => this.setState({ loggedIn: true })}
+                />
+              )
+            }
+          />
         </HashRouter>
       </div>
     );

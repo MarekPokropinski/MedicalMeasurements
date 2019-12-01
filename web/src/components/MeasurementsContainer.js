@@ -1,10 +1,11 @@
 import React from "react";
-import { Tabs, Tab } from "@material-ui/core";
+import { Tabs, Tab, Button } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import { Route } from "react-router-dom";
 import HeartPressureView from "./HeartPressureView";
 import BloodSugarView from "./BloodSugarView";
 import BmiView from "./BmiView";
+import autobind from "class-autobind";
 
 const styles = theme => ({
   root: {
@@ -54,11 +55,32 @@ class MeasurementsContainer extends React.Component {
       selectedTab: 1
     };
     this.routes = ["/pressure/", "/sugar/", "/bmi/"];
+    autobind(this);
+  }
+
+  logout() {
+    localStorage.removeItem("token");
+    this.props.history.push("/");
+    this.props.onLogout();
+  }
+
+  setPage(page) {
+    this.setState({ selectedTab: page });
+    return null;
   }
 
   render() {
     const { classes } = this.props;
     const { selectedTab } = this.state;
+
+    let SubComponent;
+    if (selectedTab === 1) {
+      SubComponent = HeartPressureView;
+    } else if (selectedTab === 2) {
+      SubComponent = BloodSugarView;
+    } else if (selectedTab === 3) {
+      SubComponent = BmiView;
+    }
 
     return (
       <div className={classes.root}>
@@ -68,8 +90,8 @@ class MeasurementsContainer extends React.Component {
             orientation="vertical"
             value={selectedTab}
             onChange={(_event, newValue) => {
-              const route = this.routes[newValue - 1];
-              this.props.history.push({ pathname: route });
+              // const route = this.routes[newValue - 1];
+              // this.props.history.push({ pathname: route });
               this.setState({ selectedTab: newValue });
             }}
           >
@@ -92,11 +114,12 @@ class MeasurementsContainer extends React.Component {
             />
             <Tab className={classes.tab} label="Bmi" {...a11yProps(3)} />
           </Tabs>
+          <Button onClick={this.logout} variant="contained" color="primary">
+            logout
+          </Button>
         </div>
         <div className={classes.tabpanel}>
-          <Route exact path="/pressure" component={HeartPressureView} />
-          <Route exact path="/sugar" component={BloodSugarView} />
-          <Route exact path="/bmi" component={BmiView} />
+          <SubComponent />
         </div>
       </div>
     );
