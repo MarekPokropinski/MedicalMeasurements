@@ -8,7 +8,8 @@ from .views import (
     BloodSugarDetailsView,
     HeartPressureCategoryView,
     BloodSugarCategoryView,
-    BmiCategoryView
+    BmiCategoryView,
+    GetCredentialsView
 )
 
 urlpatterns = [
@@ -21,4 +22,6 @@ urlpatterns = [
     path('sugar-measurements', ListBloodSugarView.as_view()),
     path('sugar-measurements/<int:pk>', BloodSugarDetailsView.as_view()),
     path('sugar-measurements/category', BloodSugarCategoryView.as_view()),
+
+    path('credentials', GetCredentialsView.as_view()),
 ]

@@ -11,6 +11,8 @@ from .serializers import (
     get_bmi_category)
 from .permissions import IsOwner
 import datetime
+from oauth2client import client
+import os
 
 
 def getFilteredQueryset(view, model):
@@ -97,6 +99,7 @@ class ListBmiMeasurementView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
+
 class BmiCategoryView(generics.GenericAPIView):
     serializer_class = BmiMeasurementSerializer
 
@@ -104,13 +107,32 @@ class BmiCategoryView(generics.GenericAPIView):
         serializer = self.get_serializer_class()(data=request.data)
         if serializer.is_valid():
             data = serializer.validated_data
-            if data['height']<10:
-                return Response(status=400)            
+            if data['height'] < 10:
+                return Response(status=400)
             return Response(get_bmi_category(float(data['weight'])/((data['height']/100)**2)))
         else:
             return Response(status=400)
+
 
 class BmiMeasurementDetailsView(generics.RetrieveUpdateDestroyAPIView):
     queryset = BmiMeasurement.objects.all()
     serializer_class = BmiMeasurementSerializer
     permission_classes = [IsOwner]
+
+
+class GetCredentialsView(generics.GenericAPIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        credentials = client.credentials_from_code(
+            os.environ.get("oauth2_key"),
+            os.environ.get("oauth2_secret"),
+            ["email", "profile"],
+            request.GET["code"],
+            redirect_uri="http://localhost:3000"
+        )
+        # print(credentials.id_token)
+        # print(dir(credentials))
+        # print(credentials.get_access_token())
+        # print(credentials.token_response)
+        return Response(credentials.token_response['access_token'])
