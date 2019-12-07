@@ -21,12 +21,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get("secret_key", "secret")
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_ALLOW_ALL = False
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = [os.environ.get("host", "")]
+CORS_ORIGIN_WHITELIST = [os.environ.get("cors_origin", "")]
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get("oauth2_key")
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get("oauth2_secret")
