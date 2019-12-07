@@ -131,8 +131,5 @@ class GetCredentialsView(generics.GenericAPIView):
             request.GET["code"],
             redirect_uri="http://localhost:3000"
         )
-        # print(credentials.id_token)
-        # print(dir(credentials))
-        # print(credentials.get_access_token())
-        # print(credentials.token_response)
+
         return Response(credentials.token_response['access_token'])
