@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.medicalmeasurements.ui.pressure.AddPressureFragment;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -22,6 +23,7 @@ import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.util.Consumer;
+import androidx.fragment.app.Fragment;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -33,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 1;
     private GoogleSignInClient googleClient;
     private String token;
-    ApiService apiService;
+    private ApiService apiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,12 +53,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.102:8000/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
 
-        apiService = retrofit.create(ApiService.class);
+        apiService = ApiServiceConfig.getApiService();
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestServerAuthCode("641328261456-ocqg4rj3butg5308i0ano2n51tgt2fk6.apps.googleusercontent.com")
@@ -71,20 +69,19 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
-    private void getHeartMeasurements() {
-        apiService.getHeartMeasurements(token).enqueue(new Callback<List<HeartMeasurement>>() {
-            @Override
-            public void onResponse(Call<List<HeartMeasurement>> call, Response<List<HeartMeasurement>> response) {
-                HeartMeasurement hm = response.body().get(0);
-                Log.i("response", hm.toString());
-            }
-
-            @Override
-            public void onFailure(Call<List<HeartMeasurement>> call, Throwable t) {
-                Log.w("response fail", t.getMessage());
-            }
-        });
-    }
+//    private void getHeartMeasurements() {
+//        apiService.getHeartMeasurements(token).enqueue(new Callback<List<HeartMeasurement>>() {
+//            @Override
+//            public void onResponse(Call<List<HeartMeasurement>> call, Response<List<HeartMeasurement>> response) {
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<HeartMeasurement>> call, Throwable t) {
+//                Log.w("response fail", t.getMessage());
+//            }
+//        });
+//    }
 
 
     @Override
@@ -101,33 +98,54 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
+
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-            String code = account.getServerAuthCode();
-            apiService.getToken(code).enqueue(new Callback<String>(){
-
-                @Override
-                public void onResponse(Call<String> call, Response<String> response) {
-                    token = "Bearer google-oauth2 " + response.body();
-                    getHeartMeasurements();
-                }
-
-                @Override
-                public void onFailure(Call<String> call, Throwable t) {
-                    Log.w("login","fail");
-                }
-            });
-
-
+            login(account);
         } catch (ApiException e) {
-            Toast.makeText(getApplicationContext(), "fail: " + e.getStatusCode(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "failed to log in", Toast.LENGTH_LONG);
         }
+
     }
 
+    void login(GoogleSignInAccount account) {
+        String code = account.getServerAuthCode();
+        if (code == null) {
+            return;
+        }
+        Log.i("code", code);
+        apiService.getToken(code).enqueue(new Callback<String>() {
+
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                token = "Bearer google-oauth2 " + response.body();
+                Log.i("debug", "starting view with token " + token);
+                goToMeasurementsView();
+                Log.i("debug", "started");
+
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.w("login", "fail");
+            }
+        });
+    }
+
+    void goToMeasurementsView() {
+        Intent measurementsIntent = new Intent(this, MeasurementsActivity.class);
+        measurementsIntent.putExtra("token", token);
+        startActivity(measurementsIntent);
+    }
 
     @Override
     protected void onStart() {
         super.onStart();
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        if (account != null) {
+            login(account);
+        }
     }
+
+
 }

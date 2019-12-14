@@ -2,7 +2,7 @@ import Axios from "axios";
 import { createBrowserHistory } from "history";
 
 const client = Axios.create({
-  baseURL: "http://localhost:8000"
+  baseURL: "http://156.17.226.48:8000"
 });
 
 client.interceptors.response.use(
