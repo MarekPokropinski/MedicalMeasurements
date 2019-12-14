@@ -1,1 +1,1 @@
-web: gunicorn api/measurements_api.wsgi
+web: gunicorn --pythonpath api/ measurements_api.wsgi
